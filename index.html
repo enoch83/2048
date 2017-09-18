@@ -15,16 +15,21 @@
             border-radius: 8px;
             position: relative;
         }
-        .column {
+        .column, .tile {
                 border-radius: 8px;
                 width: 100px;
                 height: 100px;
                 margin: 25px;
-                background: lightgray;
                 position: absolute;
-                font-size: 45px;
-                color:blanchedalmond;
-            }
+        }
+        .column {
+            background: lightgray;
+            z-index: 1;
+        }
+        .tile {
+            text-align: center;
+            z-index: 10;
+        }
   </style>
 </head>
 
@@ -35,11 +40,12 @@
 
     <script type="text/javascript">
 
-        var game = {
+        var engine = {
             rows: [],
             setup: function() {
                 // create four rows, each row contaning four columns
                 this.rows = [];
+                this.tiles = [];
                 for(var i = 0; i < 4; i++) {
                     var columns = [];
                     for(var j = 0; j < 4; j++) {
@@ -59,7 +65,16 @@
                 }
             },
             start: function() {
+                // When the game is started, two tiles ar generated
+                this.generateTile();
+                this.generateTile();
+            },
+            generateTile: function() {
+                var t = new tile(this, true);
+                this.tiles.push(t);
 
+                var game = document.getElementById('game');
+                t.render(game);
             }
         }
 
@@ -77,6 +92,7 @@
             this.y = y;
             this.x = x;
             this.id = `${y}_${x}`
+            this.tile = null;
         }
 
         column.prototype.render = function(game) {
@@ -94,7 +110,77 @@
             game.appendChild(box);
         }
 
-        game.setup();
+        column.prototype.setTile = function(tile) {
+            this.tile = tile;
+        }
+
+        column.prototype.isEmpty = function() {
+            return !this.tile;
+        }
+
+        // take game as param??? neet to do a lookup on rows and columns..
+        function tile(game, init) {
+            console.log(init);
+            // if init, the generate a number(2/4)
+            if(init) {
+                this.num = Math.round(Math.random()) == 0 ? 2 : 4;
+                console.log(this.num);
+
+                // get a column where the is no tile 
+                let emptyColumnFound = false;
+                while(!emptyColumnFound) {
+                    // generate two random numers, one for x axis and one for y axis
+                    const x = Math.round(Math.random()*3);
+                    const y = Math.round(Math.random()*3);
+
+                    // get the column from the game object
+                    // if column.isEmpty, the place the tile in the column
+                    // set emptyColumnFound to true to end the while loop
+                    const column = game.rows[y].columns[x];
+                    console.log(column.isEmpty());
+                    if(column.isEmpty()) {
+                        
+                        console.log(`x: ${x}, y: ${y}`);
+
+                        this.x = x;
+                        this.y = y;
+                        column.setTile(this);
+                        
+                        emptyColumnFound = true;
+                    }
+                }
+            }
+
+            this.backgroundColor = function () {
+                return "green";
+            }    
+
+            this.fontSize = function() {
+                return 45;
+            }
+        }
+
+        tile.prototype.render = function(game) {
+            // create a div, set id and class
+            var div = document.createElement("div");
+            div.classList.add('tile');
+            div.innerHTML = this.num;
+
+            // set the position of the div.
+            // I use alot of hardcoded values, this neet to be fixed
+            // the game element is 500px wide, (4 * 100) + (20 * x) will position the columns right 
+            div.style.left = (this.x * 100) + 25 * this.x +'px';
+            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            
+            // set background color and font-size based on num
+            div.style.background = this.backgroundColor();
+            div.style.fontSize = this.fontSize() + 'px';
+
+            game.appendChild(div);
+        }
+
+        engine.setup();
+        engine.start();
     </script>
 </body>
 </html>
