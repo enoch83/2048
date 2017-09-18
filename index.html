@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>2048</title>
+
+  <style type="text/css">
+        #game {
+            width: 500px;
+            height: 500px;
+            background: gray;
+            padding: 10px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .column {
+                border-radius: 8px;
+                width: 100px;
+                height: 100px;
+                margin: 25px;
+                background: lightgray;
+                position: absolute;
+                font-size: 45px;
+                color:blanchedalmond;
+            }
+  </style>
+</head>
+
+<body>
+    <h1>Qlik assignment</h1>
+
+    <div id="game"></div>
+
+    <script type="text/javascript">
+
+        var game = {
+            rows: [],
+            setup: function() {
+                // create four rows, each row contaning four columns
+                this.rows = [];
+                for(var i = 0; i < 4; i++) {
+                    var columns = [];
+                    for(var j = 0; j < 4; j++) {
+                        // each column contains values for x and y.
+                        columns[j] = new column(i, j);
+                    }
+                    // add the row with it's columns to the array
+                    this.rows.push(new row(columns));
+                }
+
+                // setup a game area.
+                // get the div 'game' by id
+                var game = document.getElementById('game');
+                // for each row, call the render
+                for(var i = 0; i < this.rows.length; i++) {
+                    this.rows[i].render(game);
+                }
+            },
+            start: function() {
+
+            }
+        }
+
+        function row(columns) {
+            this.columns = columns
+        };
+
+        row.prototype.render = function(game) {
+            for(var i = 0; i < this.columns.length; i++) {
+                this.columns[i].render(game);
+            }
+        }
+
+        function column(y, x) {
+            this.y = y;
+            this.x = x;
+            this.id = `${y}_${x}`
+        }
+
+        column.prototype.render = function(game) {
+            // create a div, set id and class
+            var box = document.createElement("div");
+            box.id = this.id;
+            box.classList.add('column');
+            
+            // set the position of the div.
+            // I use alot of hardcoded values, this neet to be fixed
+            // the game element is 500px wide, (4 * 100) + (20 * x) will position the columns right 
+            box.style.left = (this.x * 100) + 25 * this.x +'px';
+            box.style.top = (this.y * 100)  + 25 * this.y +'px';
+
+            game.appendChild(box);
+        }
+
+        game.setup();
+    </script>
+</body>
+</html>
