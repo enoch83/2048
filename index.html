@@ -302,7 +302,23 @@
             this.id = `tile_${y}_${x}`;
 
             this.backgroundColor = function () {
-                return "green";
+                switch(this.num) {
+                    case 2:
+                        return "#13A1CB";
+                    break;
+                    case 4:
+                        return "#728CB0";
+                    break;
+                    case 8:
+                        return "#C296B6";
+                    break;
+                    case 16:
+                        return "#EB77A6";
+                    break;
+                    case 32:
+                        return "#E23D80";
+                    break;
+                }
             }    
 
             this.fontSize = function() {
@@ -361,6 +377,7 @@
             div.style.left = (this.x * 100) + 25 * this.x +'px';
             div.style.top = (this.y * 100)  + 25 * this.y +'px';
             div.id = this.id;
+            div.style.background = this.backgroundColor();
             div.innerHTML = this.num;
         }
 
