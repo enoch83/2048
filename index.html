@@ -42,6 +42,7 @@
 
         var engine = {
             rows: [],
+            tiles: [],
             setup: function() {
                 // create four rows, each row contaning four columns
                 this.rows = [];
@@ -65,13 +66,75 @@
                 }
             },
             start: function() {
+                var engine = this;
                 // When the game is started, two tiles ar generated
-                this.generateTile();
-                this.generateTile();
+                engine.generateTile();
+                engine.generateTile();
+
+                window.addEventListener('keydown', function (e) {
+                    console.log(e.keyCode);
+                    if(e.keyCode == 37) { // Left
+                        // start by doing a basic loop on the y-axis(rows)
+                        // for each row, get all the tiles that's on that row, then sort them by x
+                        for(let i = 0; i < 4; i++) {
+                            var tilesOnRow = [];
+                            for(let j = 0; j < engine.tiles.length; j++) {
+                                if(engine.tiles[j].y === i) {
+                                    tilesOnRow.push(engine.tiles[j]);
+                                }
+                            }
+
+                            tilesOnRow = tilesOnRow.sort(function(t1, t2) {
+                                return t1.x < t2.x;
+                            });
+
+
+                            // fore each tile on row, check all columns to the left(index < x).
+                            // if it's empty, move the tile
+                            for(var j = 0; j < tilesOnRow.length; j++) {
+                                var t = tilesOnRow[j];
+                                var x = t.x;
+                                for(let k = x-1; k >= 0; k--) {
+                                    if(engine.rows[i].columns[k].isEmpty()) {
+                                        // remove tile for old column
+                                        engine.rows[t.y].columns[t.x].removeTile();
+                                        // move tile
+                                        t.move(t.y, k);
+                                        // add tile to new column
+                                        engine.rows[i].columns[k].addTile(t);
+                                    }
+                                }
+                            }
+                        }                 
+                    }
+                })
             },
             generateTile: function() {
-                var t = new tile(this, true);
-                this.tiles.push(t);
+                var engine = this;
+                var num = Math.round(Math.random()) == 0 ? 2 : 4;
+
+                // get a column where the is no tile 
+                let emptyColumnFound = false;
+                while(!emptyColumnFound) {
+                    // generate two random numers, one for x axis and one for y axis
+                    const x = Math.round(Math.random()*3);
+                    const y = Math.round(Math.random()*3);
+
+                    // get the column from the game object
+                    // if column.isEmpty, the place the tile in the column
+                    // set emptyColumnFound to true to end the while loop
+                    const column = engine.rows[y].columns[x];
+                    if(column.isEmpty()) {
+
+                        var t = new tile(num, y, x);
+
+                        column.addTile(t);
+                        engine.tiles.push(t);
+                        
+                        emptyColumnFound = true;
+                    }
+                }
+
 
                 var game = document.getElementById('game');
                 t.render(game);
@@ -97,59 +160,37 @@
 
         column.prototype.render = function(game) {
             // create a div, set id and class
-            var box = document.createElement("div");
-            box.id = this.id;
-            box.classList.add('column');
+            var div = document.createElement("div");
+            div.id = this.id;
+            div.classList.add('column');
             
             // set the position of the div.
             // I use alot of hardcoded values, this neet to be fixed
             // the game element is 500px wide, (4 * 100) + (20 * x) will position the columns right 
-            box.style.left = (this.x * 100) + 25 * this.x +'px';
-            box.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.style.left = (this.x * 100) + 25 * this.x +'px';
+            div.style.top = (this.y * 100)  + 25 * this.y +'px';
 
-            game.appendChild(box);
+            game.appendChild(div);
         }
 
-        column.prototype.setTile = function(tile) {
+        column.prototype.addTile = function(tile) {
             this.tile = tile;
+        }
+
+        column.prototype.removeTile = function() {
+            this.tile = null;
         }
 
         column.prototype.isEmpty = function() {
             return !this.tile;
         }
 
-        // take game as param??? neet to do a lookup on rows and columns..
-        function tile(game, init) {
-            console.log(init);
-            // if init, the generate a number(2/4)
-            if(init) {
-                this.num = Math.round(Math.random()) == 0 ? 2 : 4;
-                console.log(this.num);
-
-                // get a column where the is no tile 
-                let emptyColumnFound = false;
-                while(!emptyColumnFound) {
-                    // generate two random numers, one for x axis and one for y axis
-                    const x = Math.round(Math.random()*3);
-                    const y = Math.round(Math.random()*3);
-
-                    // get the column from the game object
-                    // if column.isEmpty, the place the tile in the column
-                    // set emptyColumnFound to true to end the while loop
-                    const column = game.rows[y].columns[x];
-                    console.log(column.isEmpty());
-                    if(column.isEmpty()) {
-                        
-                        console.log(`x: ${x}, y: ${y}`);
-
-                        this.x = x;
-                        this.y = y;
-                        column.setTile(this);
-                        
-                        emptyColumnFound = true;
-                    }
-                }
-            }
+        function tile(num, y, x) {
+            
+            this.num = num;
+            this.x = x;
+            this.y = y;
+            this.id = `tile_${y}_${x}`
 
             this.backgroundColor = function () {
                 return "green";
@@ -163,6 +204,7 @@
         tile.prototype.render = function(game) {
             // create a div, set id and class
             var div = document.createElement("div");
+            div.id = this.id;
             div.classList.add('tile');
             div.innerHTML = this.num;
 
@@ -177,6 +219,20 @@
             div.style.fontSize = this.fontSize() + 'px';
 
             game.appendChild(div);
+        }
+
+        tile.prototype.move = function(y, x, num) {
+
+            var div = document.getElementById(this.id);
+
+            this.x = x;
+            this.y = y;
+            this.num = num;
+            this.id = `tile_${this.y}_${this.x}`
+
+            div.style.left = (this.x * 100) + 25 * this.x +'px';
+            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.id = this.id;
         }
 
         engine.setup();
