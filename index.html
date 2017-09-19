@@ -74,39 +74,28 @@
                 window.addEventListener('keydown', function (e) {
                     console.log(e.keyCode);
                     if(e.keyCode == 37) { // Left
-                        // start by doing a basic loop on the y-axis(rows)
-                        // for each row, get all the tiles that's on that row, then sort them by x
                         for(let i = 0; i < 4; i++) {
-                            var tilesOnRow = [];
-                            for(let j = 0; j < engine.tiles.length; j++) {
-                                if(engine.tiles[j].y === i) {
-                                    tilesOnRow.push(engine.tiles[j]);
-                                }
-                            }
+                            var tilesOnRow = engine.getTilesByRow(i);
 
-                            tilesOnRow = tilesOnRow.sort(function(t1, t2) {
-                                return t1.x < t2.x;
-                            });
-
-
-                            // fore each tile on row, check all columns to the left(index < x).
-                            // if it's empty, move the tile
                             for(var j = 0; j < tilesOnRow.length; j++) {
                                 var t = tilesOnRow[j];
-                                var x = t.x;
-                                for(let k = x-1; k >= 0; k--) {
-                                    if(engine.rows[i].columns[k].isEmpty()) {
-                                        // remove tile for old column
-                                        engine.rows[t.y].columns[t.x].removeTile();
-                                        // move tile
-                                        t.move(t.y, k);
-                                        // add tile to new column
-                                        engine.rows[i].columns[k].addTile(t);
-                                    }
+                                for(let k = t.x-1; k >= 0; k--) {
+                                    engine.tryMoveTile(i, k, t);
                                 }
                             }
                         }                 
-                    }
+                    } else if(e.keyCode == 39) { // Right
+                        for(let i = 0; i < 4; i++) {
+                            var tilesOnRow = engine.getTilesByRow(i);
+
+                            for(var j = 0; j < tilesOnRow.length; j++) {
+                                var t = tilesOnRow[j];
+                                for(let k = t.x+1; k < 4; k++) {
+                                    engine.tryMoveTile(i, k, t);
+                                }
+                            }
+                        }       
+                    } 
 
                     if(e.keyCode >= 37 && e.keyCode <= 40) {
                         engine.generateTile();
@@ -142,6 +131,28 @@
 
                 var game = document.getElementById('game');
                 t.render(game);
+            },
+            tryMoveTile: function(row, column, tile) {
+                var engine = this;
+                if(engine.rows[row].columns[column].isEmpty()) {
+                    // remove tile for old column
+                    engine.rows[tile.y].columns[tile.x].removeTile();
+                    // move tile
+                    tile.move(row, column);
+                    // add tile to new column
+                    engine.rows[row].columns[column].addTile(tile);
+                }
+            },
+            getTilesByRow: function(row) {
+                var engine = this;
+                var tiles = [];
+                for(let j = 0; j < engine.tiles.length; j++) {
+                    if(engine.tiles[j].y === row) {
+                        tiles.push(engine.tiles[j]);
+                    }
+                }
+
+                return tiles;
             }
         }
 
