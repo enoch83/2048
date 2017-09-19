@@ -73,32 +73,78 @@
 
                 window.addEventListener('keydown', function (e) {
                     console.log(e.keyCode);
+                    var didMoveTile = false;
                     if(e.keyCode == 37) { // Left
-                        for(let i = 0; i < 4; i++) {
+                        // for each row, get all tiles and sort them by x in ascending
+                        // loop over all columns with an index less then x (down to 0) of tile stating at tile x - 1(first possible column to move to)
+                        // try to move the tile
+                        for(var i = 0; i < 4; i++) {
                             var tilesOnRow = engine.getTilesByRow(i);
+
+                            tilesOnRow = tilesOnRow.sort(function(t1, t2) {
+                                 return t1.x - t2.x;
+                            });
 
                             for(var j = 0; j < tilesOnRow.length; j++) {
                                 var t = tilesOnRow[j];
                                 for(let k = t.x-1; k >= 0; k--) {
-                                    engine.tryMoveTile(i, k, t);
+                                    var didAMove = engine.tryMoveTile(i, k, t);
+
+                                    if(!didMoveTile  && didAMove) {
+                                        didMoveTile = true;
+                                    }
                                 }
                             }
                         }                 
                     } else if(e.keyCode == 39) { // Right
-                        for(let i = 0; i < 4; i++) {
+                        // for each row, get all tiles and sort them by x in descending
+                        // loop over all columns with an index grader then x (up to 3) of tile stating at tile x + 1(first possible column to move to)
+                        // try to move the tile
+                        for(var i = 0; i < 4; i++) {
                             var tilesOnRow = engine.getTilesByRow(i);
+                            
+                            tilesOnRow = tilesOnRow.sort(function(t1, t2) {
+                                 return t2.x - t1.x;
+                            });
 
                             for(var j = 0; j < tilesOnRow.length; j++) {
                                 var t = tilesOnRow[j];
                                 for(let k = t.x+1; k < 4; k++) {
-                                    engine.tryMoveTile(i, k, t);
+                                    var didAMove = engine.tryMoveTile(i, k, t);
+                                    
+                                    if(!didMoveTile  && didAMove) {
+                                        didMoveTile = true;
+                                    }
                                 }
                             }
                         }       
-                    } 
+                    } else if(e.keyCode == 38) { // Up
+                        // for each column, get all tiles and sort them by y in descending
+                        // loop over all rows with an index grader then y (up to 3) of tile stating at tile y + 1(first possible row to move to)
+                        // try to move the tile
+                        for(var i = 0; i < 4; i++) {
+                            var tilesOnColumn = engine.getTilesByColumn(i);
 
-                    if(e.keyCode >= 37 && e.keyCode <= 40) {
-                        engine.generateTile();
+                            tilesOnColumn = tilesOnColumn.sort(function(t1, t2) {
+                                return t1.y - t2.y;
+                            });
+
+                            for(var j = 0; j < tilesOnColumn.length; j++) {
+                                var t = tilesOnColumn[j];
+                                for(let k = t.y-1; k >= 0; k--) {
+                                    var didAMove = engine.tryMoveTile(k, i,  t);
+
+                                    if(!didMoveTile  && didAMove) {
+                                        didMoveTile = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // if any of the arrow keys was pushed and atleast one tile was moved, generate a new tile
+                    if(e.keyCode >= 37 && e.keyCode <= 40 && didMoveTile) {
+                        engine.generateTile(engine.tiles.length + 1);
                     }
                 })
             },
@@ -128,7 +174,6 @@
                     }
                 }
 
-
                 var game = document.getElementById('game');
                 t.render(game);
             },
@@ -141,13 +186,26 @@
                     tile.move(row, column);
                     // add tile to new column
                     engine.rows[row].columns[column].addTile(tile);
+
+                    return true;
                 }
             },
             getTilesByRow: function(row) {
                 var engine = this;
                 var tiles = [];
-                for(let j = 0; j < engine.tiles.length; j++) {
+                for(var j = 0; j < engine.tiles.length; j++) {
                     if(engine.tiles[j].y === row) {
+                        tiles.push(engine.tiles[j]);
+                    }
+                }
+
+                return tiles;
+            },
+            getTilesByColumn: function(column) {
+                var engine = this;
+                var tiles = [];
+                for(var j = 0; j < engine.tiles.length; j++) {
+                    if(engine.tiles[j].x === column) {
                         tiles.push(engine.tiles[j]);
                     }
                 }
