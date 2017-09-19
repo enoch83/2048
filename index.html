@@ -88,7 +88,7 @@
                             for(var j = 0; j < tilesOnRow.length; j++) {
                                 var t = tilesOnRow[j];
                                 for(let k = t.x-1; k >= 0; k--) {
-                                    var didAMove = engine.tryMoveTile(i, k, t);
+                                    var didAMove = engine.tryMoveOrMergeTile(i, k, t);
 
                                     if(!didMoveTile  && didAMove) {
                                         didMoveTile = true;
@@ -110,7 +110,7 @@
                             for(var j = 0; j < tilesOnRow.length; j++) {
                                 var t = tilesOnRow[j];
                                 for(let k = t.x+1; k < 4; k++) {
-                                    var didAMove = engine.tryMoveTile(i, k, t);
+                                    var didAMove = engine.tryMoveOrMergeTile(i, k, t);
                                     
                                     if(!didMoveTile  && didAMove) {
                                         didMoveTile = true;
@@ -132,7 +132,7 @@
                             for(var j = 0; j < tilesOnColumn.length; j++) {
                                 var t = tilesOnColumn[j];
                                 for(let k = t.y-1; k >= 0; k--) {
-                                    var didAMove = engine.tryMoveTile(k, i,  t);
+                                    var didAMove = engine.tryMoveOrMergeTile(k, i,  t);
 
                                     if(!didMoveTile  && didAMove) {
                                         didMoveTile = true;
@@ -154,7 +154,7 @@
                             for(var j = 0; j < tilesOnColumn.length; j++) {
                                 var t = tilesOnColumn[j];
                                 for(let k = t.y+1; k < 4; k++) {
-                                    var didAMove = engine.tryMoveTile(k, i, t);
+                                    var didAMove = engine.tryMoveOrMergeTile(k, i, t);
                                     
                                     if(!didMoveTile  && didAMove) {
                                         didMoveTile = true;
@@ -199,7 +199,7 @@
                 var game = document.getElementById('game');
                 t.render(game);
             },
-            tryMoveTile: function(row, column, tile) {
+            tryMoveOrMergeTile: function(row, column, tile) {
                 var engine = this;
                 if(engine.rows[row].columns[column].isEmpty()) {
                     // remove tile for old column
@@ -209,6 +209,20 @@
                     // add tile to new column
                     engine.rows[row].columns[column].addTile(tile);
 
+                    return true;
+                } else if(!engine.rows[row].columns[column].isEmpty() && engine.rows[row].columns[column].tile.num === tile.num) {
+                    engine.rows[tile.y].columns[tile.x].removeTile();
+                    //remove old tile from tiles array
+                    var index = engine.tiles.indexOf(engine.rows[row].columns[column].tile);
+                    if(index != -1) {
+                        engine.tiles.splice(index, 1);
+                        engine.rows[row].columns[column].removeTile();    
+                    }
+                    
+                    // move tile
+                    tile.merge(row, column, tile.num * 2);
+                    // add tile to new column
+                    engine.rows[row].columns[column].addTile(tile);
                     return true;
                 }
             },
@@ -285,7 +299,7 @@
             this.num = num;
             this.x = x;
             this.y = y;
-            this.id = `tile_${y}_${x}`
+            this.id = `tile_${y}_${x}`;
 
             this.backgroundColor = function () {
                 return "green";
@@ -316,18 +330,38 @@
             game.appendChild(div);
         }
 
-        tile.prototype.move = function(y, x, num) {
-
+        tile.prototype.move = function(y, x) {
             var div = document.getElementById(this.id);
 
             this.x = x;
             this.y = y;
-            this.num = num;
             this.id = `tile_${this.y}_${this.x}`
 
             div.style.left = (this.x * 100) + 25 * this.x +'px';
             div.style.top = (this.y * 100)  + 25 * this.y +'px';
             div.id = this.id;
+        }
+
+        tile.prototype.merge = function(y, x, num) {
+            var id = `tile_${y}_${x}`;
+
+            // remove the old tile
+            var element = document.getElementById(id);
+            element.parentNode.removeChild(element);
+
+            // get the tile to move
+            // set new values based on y,x and num
+            var div = document.getElementById(this.id);
+            this.x = x;
+            this.y = y;
+            this.num = num;
+            this.id = id;
+
+            // update the element with the new values
+            div.style.left = (this.x * 100) + 25 * this.x +'px';
+            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.id = this.id;
+            div.innerHTML = this.num;
         }
 
         engine.setup();
