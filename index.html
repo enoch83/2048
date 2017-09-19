@@ -119,8 +119,8 @@
                             }
                         }       
                     } else if(e.keyCode == 38) { // Up
-                        // for each column, get all tiles and sort them by y in descending
-                        // loop over all rows with an index grader then y (up to 3) of tile stating at tile y + 1(first possible row to move to)
+                        // for each column, get all tiles and sort them by y in ascending
+                        // loop over all rows with an index less then y (down to 0) of tile stating at tile y - 1(first possible row to move to)
                         // try to move the tile
                         for(var i = 0; i < 4; i++) {
                             var tilesOnColumn = engine.getTilesByColumn(i);
@@ -134,6 +134,28 @@
                                 for(let k = t.y-1; k >= 0; k--) {
                                     var didAMove = engine.tryMoveTile(k, i,  t);
 
+                                    if(!didMoveTile  && didAMove) {
+                                        didMoveTile = true;
+                                    }
+                                }
+                            }
+                        }
+                    } else if(e.keyCode == 40) { // Down
+                        // for each column, get all tiles and sort them by y in descending
+                        // loop over all rows with an index grader then y (up to 3) of tile stating at tile y + 1(first possible row to move to)
+                        // try to move the tile
+                        for(var i = 0; i < 4; i++) {
+                            var tilesOnColumn = engine.getTilesByColumn(i);
+
+                            tilesOnColumn = tilesOnColumn.sort(function(t1, t2) {
+                                return t2.y - t1.y;
+                            });
+
+                            for(var j = 0; j < tilesOnColumn.length; j++) {
+                                var t = tilesOnColumn[j];
+                                for(let k = t.y+1; k < 4; k++) {
+                                    var didAMove = engine.tryMoveTile(k, i, t);
+                                    
                                     if(!didMoveTile  && didAMove) {
                                         didMoveTile = true;
                                     }
