@@ -107,6 +107,10 @@
                             }
                         }                 
                     }
+
+                    if(e.keyCode >= 37 && e.keyCode <= 40) {
+                        engine.generateTile();
+                    }
                 })
             },
             generateTile: function() {
