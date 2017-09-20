@@ -28,7 +28,10 @@
         }
         .tile {
             text-align: center;
+            font-size: 45px;
             z-index: 10;
+            -webkit-transition: 150ms ease-in-out;
+            transition: 150ms ease-in-out;
         }
   </style>
 </head>
@@ -39,6 +42,18 @@
     <div id="game"></div>
 
     <script type="text/javascript">
+        var tileColors = {};
+        tileColors[2] = '#FFFFCC';
+        tileColors[4] = '#FFCC00';
+        tileColors[8] = '#CC0000';
+        tileColors[16] = '#FFFF99';
+        tileColors[32] = '#FF9900';
+        tileColors[64] = '#990000';
+        tileColors[128] = '#FFFF66';
+        tileColors[256] = '#FF6600';
+        tileColors[512] = '#660000';
+        tileColors[1024] = '#FFFF33';
+        tileColors[2048] = '#FF3300';
 
         var engine = {
             rows: [],
@@ -314,36 +329,16 @@
             return !this.tile;
         }
 
-        function tile(num, y, x) {
-            
+        function tile(num, y, x) {           
+
             this.num = num;
             this.x = x;
             this.y = y;
             this.id = `tile_${y}_${x}`;
 
             this.backgroundColor = function () {
-                switch(this.num) {
-                    case 2:
-                        return "#13A1CB";
-                    break;
-                    case 4:
-                        return "#728CB0";
-                    break;
-                    case 8:
-                        return "#C296B6";
-                    break;
-                    case 16:
-                        return "#EB77A6";
-                    break;
-                    case 32:
-                        return "#E23D80";
-                    break;
-                }
-            }    
-
-            this.fontSize = function() {
-                return 45;
-            }
+                return tileColors[this.num];
+            }  
         }
 
         tile.prototype.render = function(game) {
@@ -361,7 +356,6 @@
             
             // set background color and font-size based on num
             div.style.background = this.backgroundColor();
-            div.style.fontSize = this.fontSize() + 'px';
 
             game.appendChild(div);
         }
