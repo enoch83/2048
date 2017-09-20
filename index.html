@@ -43,6 +43,7 @@
         var engine = {
             rows: [],
             tiles: [],
+            mergedTiles: [],
             setup: function() {
                 // create four rows, each row contaning four columns
                 this.rows = [];
@@ -72,7 +73,10 @@
                 engine.generateTile();
 
                 window.addEventListener('keydown', function (e) {
-                    console.log(e.keyCode);
+
+                    // reset merged tiles on every move
+                    engine.mergedTiles = [];
+
                     var didMoveTile = false;
                     if(e.keyCode == 37) { // Left
                         // for each row, get all tiles and sort them by x in ascending
@@ -201,6 +205,10 @@
             },
             tryMoveOrMergeTile: function(row, column, tile) {
                 var engine = this;
+
+                if(engine.mergedTiles.indexOf(tile) != -1)
+                    return false;
+
                 if(engine.rows[row].columns[column].isEmpty()) {
                     // remove tile for old column
                     engine.rows[tile.y].columns[tile.x].removeTile();
@@ -223,6 +231,8 @@
                     tile.merge(row, column, tile.num * 2);
                     // add tile to new column
                     engine.rows[row].columns[column].addTile(tile);
+
+                    engine.mergedTiles.push(tile);
                     return true;
                 }
             },
