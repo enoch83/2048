@@ -1,46 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
 
-<html lang="en">
 <head>
-  <meta charset="utf-8">
+    <title>Qlik - 2048</title>
+    <!--Import Google Icon Font-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Import main.css-->
+    <link rel="stylesheet" href="./src/css/main.css">
 
-  <title>2048</title>
-
-  <style type="text/css">
-        #game {
-            width: 500px;
-            height: 500px;
-            background: gray;
-            padding: 10px;
-            border-radius: 8px;
-            position: relative;
-        }
-        .column, .tile {
-                border-radius: 8px;
-                width: 100px;
-                height: 100px;
-                margin: 25px;
-                position: absolute;
-        }
-        .column {
-            background: lightgray;
-            z-index: 1;
-        }
-        .tile {
-            text-align: center;
-            font-size: 45px;
-            z-index: 10;
-            -webkit-transition: 150ms ease-in-out;
-            transition: 150ms ease-in-out;
-        }
-  </style>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
-    <h1>Qlik assignment</h1>
+    <div class="container">
+        <br><br>
+        <h4>Qlik assignment</h4>
+        <div class="row">
+            <div class="col s6">
+                <h1>2048</h1>
+            </div>
+            <div id="score-lable" class="col s3">
+                <div class="score-box">
+                    <h6>score</h6>
+                    <h6>16</h6>
+                </div>
+            </div>
+            <div id="best-score-label" class="col s3">
+                <div class="score-box">
+                    <h6>best</h6>
+                    <h6>600</h6>
+                </div>
+            </div>
+        </div>
 
-    <div id="game"></div>
+        <div class="row center">
+            <a id="new-game-button" class="btn-large waves-effect waves-light">new game</a>
+        </div>
+    </div>
 
+    <div class="row center">
+        <div id="game"></div>
+    </div>
+    <br><br>
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    <script type="text/javascript" src="./src/js/gameHelper.js"></script>
+    <script type="text/javascript" src="./src/js/tile.js"></script>
+    <script type="text/javascript" src="./src/js/tileMap.js"></script>
+    <script type="text/javascript" src="./src/js/game.js"></script>
+    <script type="text/javascript" src="./src/js/gameController.js"></script>
+    <script type="text/javascript" src="./src/js/app.js"></script>
+    <!--
     <script type="text/javascript">
         var tileColors = {};
         tileColors[2] = '#FFFFCC';
@@ -59,20 +76,20 @@
             rows: [],
             tiles: [],
             mergedTiles: [],
-            setup: function() {
+            setup: function () {
                 // create four rows, each row contaning four columns
                 this.rows = [];
-                if(this.tiles.length > 0) {
+                if (this.tiles.length > 0) {
 
-                    for(var i = 0; i < this.tiles.length; i++) {
+                    for (var i = 0; i < this.tiles.length; i++) {
                         this.tiles[i].destroy();
                     }
                     this.tiles = [];
                 }
-                
-                for(var i = 0; i < 4; i++) {
+
+                for (var i = 0; i < 4; i++) {
                     var columns = [];
-                    for(var j = 0; j < 4; j++) {
+                    for (var j = 0; j < 4; j++) {
                         // each column contains values for x and y.
                         columns[j] = new column(i, j);
                     }
@@ -84,11 +101,11 @@
                 // get the div 'game' by id
                 var game = document.getElementById('game');
                 // for each row, call the render
-                for(var i = 0; i < this.rows.length; i++) {
+                for (var i = 0; i < this.rows.length; i++) {
                     this.rows[i].render(game);
                 }
             },
-            start: function() {
+            start: function () {
                 var engine = this;
 
                 engine.tiles = [];
@@ -100,28 +117,28 @@
 
                 window.addEventListener('keydown', handleKeyDown);
             },
-            generateTile: function() {
+            generateTile: function () {
                 var engine = this;
                 var num = Math.round(Math.random()) == 0 ? 2 : 4;
 
                 // get a column where the is no tile 
                 let emptyColumnFound = false;
-                while(!emptyColumnFound) {
+                while (!emptyColumnFound) {
                     // generate two random numers, one for x axis and one for y axis
-                    const x = Math.round(Math.random()*3);
-                    const y = Math.round(Math.random()*3);
+                    const x = Math.round(Math.random() * 3);
+                    const y = Math.round(Math.random() * 3);
 
                     // get the column from the game object
                     // if column.isEmpty, the place the tile in the column
                     // set emptyColumnFound to true to end the while loop
                     const column = engine.rows[y].columns[x];
-                    if(column.isEmpty()) {
+                    if (column.isEmpty()) {
 
                         var t = new tile(num, y, x);
 
                         column.addTile(t);
                         engine.tiles.push(t);
-                        
+
                         emptyColumnFound = true;
                     }
                 }
@@ -129,13 +146,13 @@
                 var game = document.getElementById('game');
                 t.render(game);
             },
-            tryMoveOrMergeTile: function(row, column, tile) {
+            tryMoveOrMergeTile: function (row, column, tile) {
                 var engine = this;
 
-                if(engine.mergedTiles.indexOf(tile) != -1)
+                if (engine.mergedTiles.indexOf(tile) != -1)
                     return false;
 
-                if(engine.rows[row].columns[column].isEmpty()) {
+                if (engine.rows[row].columns[column].isEmpty()) {
                     // remove tile for old column
                     engine.rows[tile.y].columns[tile.x].removeTile();
                     // move tile
@@ -144,15 +161,15 @@
                     engine.rows[row].columns[column].addTile(tile);
 
                     return true;
-                } else if(!engine.rows[row].columns[column].isEmpty() && engine.rows[row].columns[column].tile.num === tile.num) {
+                } else if (!engine.rows[row].columns[column].isEmpty() && engine.rows[row].columns[column].tile.num === tile.num) {
                     engine.rows[tile.y].columns[tile.x].removeTile();
                     //remove old tile from tiles array
                     var index = engine.tiles.indexOf(engine.rows[row].columns[column].tile);
-                    if(index != -1) {
+                    if (index != -1) {
                         engine.tiles.splice(index, 1);
-                        engine.rows[row].columns[column].removeTile();    
+                        engine.rows[row].columns[column].removeTile();
                     }
-                    
+
                     // move tile
                     tile.merge(row, column, tile.num * 2);
                     // add tile to new column
@@ -164,22 +181,22 @@
 
                 return false;
             },
-            getTilesByRow: function(row) {
+            getTilesByRow: function (row) {
                 var engine = this;
                 var tiles = [];
-                for(var j = 0; j < engine.tiles.length; j++) {
-                    if(engine.tiles[j].y === row) {
+                for (var j = 0; j < engine.tiles.length; j++) {
+                    if (engine.tiles[j].y === row) {
                         tiles.push(engine.tiles[j]);
                     }
                 }
 
                 return tiles;
             },
-            getTilesByColumn: function(column) {
+            getTilesByColumn: function (column) {
                 var engine = this;
                 var tiles = [];
-                for(var j = 0; j < engine.tiles.length; j++) {
-                    if(engine.tiles[j].x === column) {
+                for (var j = 0; j < engine.tiles.length; j++) {
+                    if (engine.tiles[j].x === column) {
                         tiles.push(engine.tiles[j]);
                     }
                 }
@@ -194,70 +211,22 @@
             engine.mergedTiles = [];
 
             var didMoveTile = false;
-            if(e.keyCode == 37) { // Left
+            if (e.keyCode == 37) { // Left
                 // for each row, get all tiles and sort them by x in ascending
                 // loop over all columns with an index less then x (down to 0) of tile stating at tile x - 1(first possible column to move to)
                 // try to move the tile
-                for(var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++) {
                     var tilesOnRow = engine.getTilesByRow(i);
 
-                    tilesOnRow = tilesOnRow.sort(function(t1, t2) {
-                            return t1.x - t2.x;
+                    tilesOnRow = tilesOnRow.sort(function (t1, t2) {
+                        return t1.x - t2.x;
                     });
 
-                    for(var j = 0; j < tilesOnRow.length; j++) {
+                    for (var j = 0; j < tilesOnRow.length; j++) {
                         var t = tilesOnRow[j];
-                        for(let k = t.x-1; k >= 0; k--) {
-                            if(engine.tryMoveOrMergeTile(i, k, t)){
-                                if(!didMoveTile) {
-                                    didMoveTile = true;
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }                 
-            } else if(e.keyCode == 39) { // Right
-                // for each row, get all tiles and sort them by x in descending
-                // loop over all columns with an index grader then x (up to 3) of tile stating at tile x + 1(first possible column to move to)
-                // try to move the tile
-                for(var i = 0; i < 4; i++) {
-                    var tilesOnRow = engine.getTilesByRow(i);
-                    
-                    tilesOnRow = tilesOnRow.sort(function(t1, t2) {
-                            return t2.x - t1.x;
-                    });
-
-                    for(var j = 0; j < tilesOnRow.length; j++) {
-                        var t = tilesOnRow[j];
-                        for(let k = t.x+1; k < 4; k++) {
-                            if(engine.tryMoveOrMergeTile(i, k, t)){
-                                if(!didMoveTile) {
-                                    didMoveTile = true;
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }       
-            } else if(e.keyCode == 38) { // Up
-                // for each column, get all tiles and sort them by y in ascending
-                // loop over all rows with an index less then y (down to 0) of tile stating at tile y - 1(first possible row to move to)
-                // try to move the tile
-                for(var i = 0; i < 4; i++) {
-                    var tilesOnColumn = engine.getTilesByColumn(i);
-
-                    tilesOnColumn = tilesOnColumn.sort(function(t1, t2) {
-                        return t1.y - t2.y;
-                    });
-
-                    for(var j = 0; j < tilesOnColumn.length; j++) {
-                        var t = tilesOnColumn[j];
-                        for(let k = t.y-1; k >= 0; k--) {
-                            if(engine.tryMoveOrMergeTile(k, i,  t)) {
-                                if(!didMoveTile) {
+                        for (let k = t.x - 1; k >= 0; k--) {
+                            if (engine.tryMoveOrMergeTile(i, k, t)) {
+                                if (!didMoveTile) {
                                     didMoveTile = true;
                                 }
                             } else {
@@ -266,22 +235,70 @@
                         }
                     }
                 }
-            } else if(e.keyCode == 40) { // Down
+            } else if (e.keyCode == 39) { // Right
+                // for each row, get all tiles and sort them by x in descending
+                // loop over all columns with an index grader then x (up to 3) of tile stating at tile x + 1(first possible column to move to)
+                // try to move the tile
+                for (var i = 0; i < 4; i++) {
+                    var tilesOnRow = engine.getTilesByRow(i);
+
+                    tilesOnRow = tilesOnRow.sort(function (t1, t2) {
+                        return t2.x - t1.x;
+                    });
+
+                    for (var j = 0; j < tilesOnRow.length; j++) {
+                        var t = tilesOnRow[j];
+                        for (let k = t.x + 1; k < 4; k++) {
+                            if (engine.tryMoveOrMergeTile(i, k, t)) {
+                                if (!didMoveTile) {
+                                    didMoveTile = true;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (e.keyCode == 38) { // Up
+                // for each column, get all tiles and sort them by y in ascending
+                // loop over all rows with an index less then y (down to 0) of tile stating at tile y - 1(first possible row to move to)
+                // try to move the tile
+                for (var i = 0; i < 4; i++) {
+                    var tilesOnColumn = engine.getTilesByColumn(i);
+
+                    tilesOnColumn = tilesOnColumn.sort(function (t1, t2) {
+                        return t1.y - t2.y;
+                    });
+
+                    for (var j = 0; j < tilesOnColumn.length; j++) {
+                        var t = tilesOnColumn[j];
+                        for (let k = t.y - 1; k >= 0; k--) {
+                            if (engine.tryMoveOrMergeTile(k, i, t)) {
+                                if (!didMoveTile) {
+                                    didMoveTile = true;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (e.keyCode == 40) { // Down
                 // for each column, get all tiles and sort them by y in descending
                 // loop over all rows with an index grader then y (up to 3) of tile stating at tile y + 1(first possible row to move to)
                 // try to move the tile
-                for(var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++) {
                     var tilesOnColumn = engine.getTilesByColumn(i);
 
-                    tilesOnColumn = tilesOnColumn.sort(function(t1, t2) {
+                    tilesOnColumn = tilesOnColumn.sort(function (t1, t2) {
                         return t2.y - t1.y;
                     });
 
-                    for(var j = 0; j < tilesOnColumn.length; j++) {
+                    for (var j = 0; j < tilesOnColumn.length; j++) {
                         var t = tilesOnColumn[j];
-                        for(let k = t.y+1; k < 4; k++) {
-                            if(engine.tryMoveOrMergeTile(k, i, t)){
-                                if(!didMoveTile) {
+                        for (let k = t.y + 1; k < 4; k++) {
+                            if (engine.tryMoveOrMergeTile(k, i, t)) {
+                                if (!didMoveTile) {
                                     didMoveTile = true;
                                 }
                             } else {
@@ -293,8 +310,8 @@
             }
 
             // did the player win?
-            for(var i = 0; i < engine.tiles.length; i++) {
-                if(engine.tiles[i].num === 2048) {
+            for (var i = 0; i < engine.tiles.length; i++) {
+                if (engine.tiles[i].num === 2048) {
 
                     // show 'won' message
 
@@ -304,15 +321,15 @@
 
             // did the player lose?
             var didPlayerLose = true;
-            for(var i = 0; i < 4; i++) {
-                for(var j = 0; j < 4; j++) {
-                    if(engine.rows[i].columns[j].isEmpty()) {
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 4; j++) {
+                    if (engine.rows[i].columns[j].isEmpty()) {
                         didPlayerLose = false;
                     }
                 }
             }
 
-            if(didPlayerLose === true) {
+            if (didPlayerLose === true) {
                 console.log(didPlayerLose);
 
                 window.removeEventListener('keydown', handleKeyDown);
@@ -321,7 +338,7 @@
                 engine.setup();
             } else {
                 // if any of the arrow keys was pushed and atleast one tile was moved, generate a new tile
-                if(e.keyCode >= 37 && e.keyCode <= 40 && didMoveTile) {
+                if (e.keyCode >= 37 && e.keyCode <= 40 && didMoveTile) {
                     engine.generateTile(engine.tiles.length + 1);
                 }
             }
@@ -331,8 +348,8 @@
             this.columns = columns
         };
 
-        row.prototype.render = function(game) {
-            for(var i = 0; i < this.columns.length; i++) {
+        row.prototype.render = function (game) {
+            for (var i = 0; i < this.columns.length; i++) {
                 this.columns[i].render(game);
             }
         }
@@ -344,34 +361,34 @@
             this.tile = null;
         }
 
-        column.prototype.render = function(game) {
+        column.prototype.render = function (game) {
             // create a div, set id and class
             var div = document.createElement("div");
             div.id = this.id;
             div.classList.add('column');
-            
+
             // set the position of the div.
             // I use alot of hardcoded values, this neet to be fixed
             // the game element is 500px wide, (4 * 100) + (20 * x) will position the columns right 
-            div.style.left = (this.x * 100) + 25 * this.x +'px';
-            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.style.left = (this.x * 112) + 10 * this.x + 'px';
+            div.style.top = (this.y * 112) + 10 * this.y + 'px';
 
             game.appendChild(div);
         }
 
-        column.prototype.addTile = function(tile) {
+        column.prototype.addTile = function (tile) {
             this.tile = tile;
         }
 
-        column.prototype.removeTile = function() {
+        column.prototype.removeTile = function () {
             this.tile = null;
         }
 
-        column.prototype.isEmpty = function() {
+        column.prototype.isEmpty = function () {
             return !this.tile;
         }
 
-        function tile(num, y, x) {           
+        function tile(num, y, x) {
 
             this.num = num;
             this.x = x;
@@ -380,10 +397,10 @@
 
             this.backgroundColor = function () {
                 return tileColors[this.num];
-            }  
+            }
         }
 
-        tile.prototype.render = function(game) {
+        tile.prototype.render = function (game) {
             // create a div, set id and class
             var div = document.createElement("div");
             div.id = this.id;
@@ -393,33 +410,33 @@
             // set the position of the div.
             // I use alot of hardcoded values, this neet to be fixed
             // the game element is 500px wide, (4 * 100) + (20 * x) will position the columns right 
-            div.style.left = (this.x * 100) + 25 * this.x +'px';
-            div.style.top = (this.y * 100)  + 25 * this.y +'px';
-            
+            div.style.left = (this.x * 112) + 10 * this.x + 'px';
+            div.style.top = (this.y * 112) + 10 * this.y + 'px';
+
             // set background color and font-size based on num
             div.style.background = this.backgroundColor();
 
             game.appendChild(div);
         }
 
-        tile.prototype.destroy = function(game) {
+        tile.prototype.destroy = function (game) {
             var div = document.getElementById(this.id);
             div.parentNode.removeChild(div);
         }
 
-        tile.prototype.move = function(y, x) {
+        tile.prototype.move = function (y, x) {
             var div = document.getElementById(this.id);
 
             this.x = x;
             this.y = y;
             this.id = `tile_${this.y}_${this.x}`
 
-            div.style.left = (this.x * 100) + 25 * this.x +'px';
-            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.style.left = (this.x * 112) + 10 * this.x + 'px';
+            div.style.top = (this.y * 112) + 10 * this.y + 'px';
             div.id = this.id;
         }
 
-        tile.prototype.merge = function(y, x, num) {
+        tile.prototype.merge = function (y, x, num) {
             var id = `tile_${y}_${x}`;
 
             // remove the old tile
@@ -435,8 +452,8 @@
             this.id = id;
 
             // update the element with the new values
-            div.style.left = (this.x * 100) + 25 * this.x +'px';
-            div.style.top = (this.y * 100)  + 25 * this.y +'px';
+            div.style.left = (this.x * 112) + 10 * this.x + 'px';
+            div.style.top = (this.y * 112) + 10 * this.y + 'px';
             div.id = this.id;
             div.style.background = this.backgroundColor();
             div.innerHTML = this.num;
@@ -445,5 +462,7 @@
         engine.setup();
         engine.start();
     </script>
+    -->
 </body>
+
 </html>
