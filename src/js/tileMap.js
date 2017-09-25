@@ -34,9 +34,6 @@ var TileMap = (function() {
         }
 
         function clear() {
-            _tileMap.forEach(function(value, key) {
-                value.destroy();
-            });
             _tileMap = new Map();
         }
 

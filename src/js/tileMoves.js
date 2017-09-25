@@ -35,6 +35,7 @@ Tile.prototype.moveLeft = function(steps) {
     }
 
     this.tileMap.deleteTile(this.y, this.x);
+
     this.x = this.x - steps;
     this.tileMap.setTile(this.y, this.x, this);
     this.render();
