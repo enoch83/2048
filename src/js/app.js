@@ -7,9 +7,12 @@
 
     var game = Game.getInstance();
     game.setup();
+    game.startNewGame();
 
     function newGame() {
-        game.start();
+        game.startNewGame();
+
+        document.getElementById('score').innerText = 0;
     }
 
     function scoreUpdateEventListener(e) {

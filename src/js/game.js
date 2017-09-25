@@ -27,11 +27,11 @@ var Game = (function() {
             gameElement.style.height = _gameSize + 'px';
 
             generateSquares();
-            generateTiles(2);
         }
 
-        function start() {
-            console.log('Start Game!');
+        function startNewGame() {
+            _tileMap.clear();
+            generateTiles(2);
         }
 
         function tileMovedEventListener() {
@@ -100,7 +100,7 @@ var Game = (function() {
 
         return {
             setup,
-            start
+            startNewGame
         };
     }
 

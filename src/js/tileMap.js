@@ -33,12 +33,20 @@ var TileMap = (function() {
             return tiles;
         }
 
+        function clear() {
+            _tileMap.forEach(function(value, key) {
+                value.destroy();
+            });
+            _tileMap = new Map();
+        }
+
         return {
             setTile,
             deleteTile,
             getTile,
             hasTile,
-            tiles
+            tiles,
+            clear
         };
     }
 

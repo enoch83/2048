@@ -37,7 +37,7 @@ Tile.prototype.render = function() {
     div.style.top = top + 'px';
     div.style.left = left + 'px';
 
-    //
+    // If tile not already exist, add to DOM
     if (!exist) {
         var game = document.getElementById('game');
         game.appendChild(div);
@@ -45,8 +45,7 @@ Tile.prototype.render = function() {
 };
 
 Tile.prototype.destroy = function() {
-    console.log('destroy');
-    // remove the old tile
+    // remove tile from DOM
     var element = document.getElementById(this.id);
     element.parentNode.removeChild(element);
 };
