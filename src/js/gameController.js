@@ -11,20 +11,22 @@ var GameController = (function() {
 
     function keydownEventListener(e) {
         var tiles = _tileMap.tiles();
-
+        var moved;
         var key = e.keyCode;
         if (key === MoveEnum.LEFT) {
-            handleLeftMove(tiles);
+            moved = handleLeftMove(tiles);
         } else if (key === MoveEnum.RIGHT) {
-            handleRightMove(tiles);
+            moved = handleRightMove(tiles);
         } else if (key === MoveEnum.UP) {
-            handleUpMove(tiles);
+            moved = handleUpMove(tiles);
         } else if (key === MoveEnum.DOWN) {
-            handleDownMove(tiles);
+            moved = handleDownMove(tiles);
         }
 
-        var event = new CustomEvent('tileMoved', { x: 'test' });
-        window.dispatchEvent(event);
+        if (moved) {
+            var event = new CustomEvent('tileMoved', { x: 'test' });
+            window.dispatchEvent(event);
+        }
     }
 
     /*
@@ -35,6 +37,7 @@ var GameController = (function() {
   */
     function handleLeftMove(tiles) {
         console.log('Move left');
+        var moved = false;
 
         tiles = tiles.sort(function(t1, t2) {
             return t1.x - t2.x;
@@ -46,8 +49,11 @@ var GameController = (function() {
             var sepsToMove = tile.canMoveLeft();
             if (sepsToMove > 0) {
                 tile.moveLeft(sepsToMove);
+                moved = true;
             }
         }
+
+        return moved;
     }
 
     /*
@@ -58,6 +64,7 @@ var GameController = (function() {
   */
     function handleRightMove(tiles) {
         console.log('Move right');
+        var moved = false;
 
         tiles = tiles.sort(function(t1, t2) {
             return t2.x - t1.x;
@@ -68,8 +75,11 @@ var GameController = (function() {
             var sepsToMove = tile.canMoveRight();
             if (sepsToMove > 0) {
                 tile.moveRight(sepsToMove);
+                moved = true;
             }
         }
+
+        return moved;
     }
 
     /*
@@ -79,6 +89,7 @@ var GameController = (function() {
   */
     function handleUpMove(tiles) {
         console.log('Move up');
+        var moved = false;
 
         tiles = tiles.sort(function(t1, t2) {
             return t1.y - t2.y;
@@ -89,8 +100,11 @@ var GameController = (function() {
             var sepsToMove = tile.canMoveUp();
             if (sepsToMove > 0) {
                 tile.moveUp(sepsToMove);
+                moved = true;
             }
         }
+
+        return moved;
     }
 
     /*
@@ -100,6 +114,7 @@ var GameController = (function() {
   */
     function handleDownMove(tiles) {
         console.log('Move down');
+        var moved = false;
 
         tiles = tiles.sort(function(t1, t2) {
             return t2.y - t1.y;
@@ -110,7 +125,10 @@ var GameController = (function() {
             var stepsToMove = tile.canMoveDown();
             if (stepsToMove > 0) {
                 tile.moveDown(stepsToMove);
+                moved = true;
             }
         }
+
+        return moved;
     }
 })();

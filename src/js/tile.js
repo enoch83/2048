@@ -27,6 +27,7 @@ Tile.prototype.render = function() {
         div.classList.add('tile');
     }
 
+    div.classList.add('tile-' + this.value);
     div.innerHTML = this.value;
 
     div.style.width = size + 'px';
@@ -35,9 +36,6 @@ Tile.prototype.render = function() {
     // set the position of the div.
     div.style.top = top + 'px';
     div.style.left = left + 'px';
-
-    // set background color and font-size based on num
-    div.style.background = '#FFFFFF'; //this.backgroundColor();
 
     //
     if (!exist) {
