@@ -109,6 +109,25 @@ h6 {
     color: #ffffff;
 }
 
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+    display: none;
+}
+
+.overlay-content {
+    color: #ffffff;
+    top: 40%;
+    position: relative;
+}
+
 @keyframes appare {
     from {
         opacity: 0;
