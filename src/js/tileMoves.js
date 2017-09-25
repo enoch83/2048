@@ -29,6 +29,9 @@ Tile.prototype.moveLeft = function(steps) {
 
         this.tileMap.deleteTile(this.y, this.x - steps);
         this.value = this.value * 2;
+
+        var event = new CustomEvent('scoreUpdate', { detail: this.value });
+        window.dispatchEvent(event);
     }
 
     this.tileMap.deleteTile(this.y, this.x);
@@ -62,6 +65,9 @@ Tile.prototype.moveRight = function(steps) {
 
         this.tileMap.deleteTile(this.y, this.x + steps);
         this.value = this.value * 2;
+
+        var event = new CustomEvent('scoreUpdate', { detail: this.value });
+        window.dispatchEvent(event);
     }
 
     this.tileMap.deleteTile(this.y, this.x);
@@ -94,6 +100,9 @@ Tile.prototype.moveUp = function(steps) {
 
         this.tileMap.deleteTile(this.y - steps, this.x);
         this.value = this.value * 2;
+
+        var event = new CustomEvent('scoreUpdate', { detail: this.value });
+        window.dispatchEvent(event);
     }
 
     this.tileMap.deleteTile(this.y, this.x);
@@ -127,6 +136,9 @@ Tile.prototype.moveDown = function(steps) {
 
         this.tileMap.deleteTile(this.y + steps, this.x);
         this.value = this.value * 2;
+
+        var event = new CustomEvent('scoreUpdate', { detail: this.value });
+        window.dispatchEvent(event);
     }
 
     this.tileMap.deleteTile(this.y, this.x);
