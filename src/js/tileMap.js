@@ -9,13 +9,19 @@ var TileMap = (function() {
             _tileMap.set(key, obj);
         }
 
+        function deleteTile(y, x) {
+            var key = `${y}_${x}`;
+            _tileMap.delete(key);
+        }
+
         function getTile(y, x) {
-            return _tileMap.get(`${y}_${x}`);
+            var key = `${y}_${x}`;
+            return _tileMap.get(key);
         }
 
         function hasTile(y, x) {
-            console.log(`has(${y}_${x})`);
-            return _tileMap.has(`${y}_${x}`);
+            var key = `${y}_${x}`;
+            return _tileMap.has(key);
         }
 
         function tiles() {
@@ -29,6 +35,7 @@ var TileMap = (function() {
 
         return {
             setTile,
+            deleteTile,
             getTile,
             hasTile,
             tiles

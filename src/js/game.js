@@ -2,7 +2,7 @@ var Game = (function() {
     var _instance;
 
     function init() {
-        var _gameSize, _dimensions, _padding, _helper, _tileMap;
+        var _gameSize, _dimensions, _padding, _helper, _tileMap, _numberOfTilesGenerated;
 
         function setup(gameSize = 500, dimensions = 4, padding = 15) {
             console.log('Setup Game!');
@@ -10,9 +10,12 @@ var Game = (function() {
             _gameSize = gameSize;
             _dimensions = dimensions;
             _padding = padding;
+            _numberOfTilesGenerated = 0;
 
-            _helper = new GameHelper(_gameSize, _dimensions, _padding);
+            _helper = GameHelper.getInstance(_gameSize, _dimensions, _padding);
             _tileMap = TileMap.getInstance();
+
+            window.addEventListener('tileMoved', tileMovedEventListener);
 
             // get the element 'game'. If not found, throw error
             var gameElement = document.getElementById('game');
@@ -29,6 +32,10 @@ var Game = (function() {
 
         function start() {
             console.log('Start Game!');
+        }
+
+        function tileMovedEventListener() {
+            generateTiles();
         }
 
         var generateSquares = function() {
@@ -66,8 +73,9 @@ var Game = (function() {
             var squareSize = _helper.calcSquareSize();
 
             for (var i = 0; i < count; i++) {
+                _numberOfTilesGenerated += 1;
                 // generate a value for the tile, 0 = 2, 1 = 4;
-                var value = Math.round(Math.random()) == 0 ? 2 : 4;
+                var value = 2; //Math.round(Math.random()) == 0 ? 2 : 4;
 
                 // we have to find a square where there is no tile, an empty square.
                 let emptySquareFound = false;
@@ -81,10 +89,10 @@ var Game = (function() {
                     if (!_tileMap.hasTile(y, x)) {
                         emptySquareFound = true;
 
-                        var tile = new Tile(y, x, value);
+                        var tile = new Tile(y, x, value, _numberOfTilesGenerated);
                         _tileMap.setTile(y, x, tile);
 
-                        tile.render(squareSize, _helper.calcTop(y, squareSize), _helper.calcLeft(x, squareSize));
+                        tile.render();
                     }
                 }
             }

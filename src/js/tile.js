@@ -1,15 +1,32 @@
-function Tile(y, x, value) {
+function Tile(y, x, value, id) {
     this.y = y;
     this.x = x;
     this.value = value;
+
+    this.id = id;
+
     this.tileMap = TileMap.getInstance();
+    this.helper = GameHelper.getInstance();
 }
 
-Tile.prototype.render = function(size, top, left) {
-    // create a div, set id and class
-    var div = document.createElement('div');
-    //div.id = this.id;
-    div.classList.add('tile');
+Tile.prototype.render = function() {
+    var size = this.helper.calcSquareSize();
+    var top = this.helper.calcTop(this.y, size);
+    var left = this.helper.calcLeft(this.x, size);
+
+    var div;
+    var exist = false;
+    // try to get the element by id
+    if (document.getElementById(this.id)) {
+        div = document.getElementById(this.id);
+        exist = true;
+    } else {
+        // create a div, set id and class
+        div = document.createElement('div');
+        div.id = this.id;
+        div.classList.add('tile');
+    }
+
     div.innerHTML = this.value;
 
     div.style.width = size + 'px';
@@ -22,25 +39,16 @@ Tile.prototype.render = function(size, top, left) {
     // set background color and font-size based on num
     div.style.background = '#FFFFFF'; //this.backgroundColor();
 
-    var game = document.getElementById('game');
-    game.appendChild(div);
-};
-
-Tile.prototype.canMoveLeft = function() {
-    // a tile at position 0 on x-axis can never be moved left
-    if (this.x === 0) return false;
-
-    // check if there is a tile on this.x - 1
-    if (this.tileMap.hasTile(this.y, this.x - 1)) {
-        var blockingTile = this.tileMap.getTile(this.y, this.x - 1);
-        if (blockingTile.value === this.value) {
-            console.log('Colliding');
-        } else {
-            return false;
-        }
+    //
+    if (!exist) {
+        var game = document.getElementById('game');
+        game.appendChild(div);
     }
-
-    return true;
 };
 
-Tile.prototype.moveLeft = function() {};
+Tile.prototype.destroy = function() {
+    console.log('destroy');
+    // remove the old tile
+    var element = document.getElementById(this.id);
+    element.parentNode.removeChild(element);
+};

@@ -50,6 +50,18 @@ h6 {
     text-align: center;
     font-size: 45px;
     z-index: 10;
-    -webkit-transition: 150ms ease-in-out;
-    transition: 150ms ease-in-out;
+    -webkit-transition: 150ms linear;
+    transition: 150ms linear;
+    animation-duration: 500ms;
+    animation-name: appare;
+}
+
+@keyframes appare {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
