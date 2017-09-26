@@ -7,16 +7,17 @@ var GameController = (function() {
         DOWN: 40
     };
 
+    // add event listeners
     window.addEventListener('keydown', keydownEventListener);
     window.addEventListener('touchstart', handleTouchStart, false);
     window.addEventListener('touchmove', handleTouchMove, false);
 
     function keydownEventListener(e) {
+        // get all tiles, clear the merged tiles map.
         var tiles = _tileMap.tiles();
         _tileMap.clearMerged();
 
-        var moved;
-
+        var moved; // true/false is a move was made.
         var key = e.keyCode;
         if (key === MoveEnum.LEFT) {
             moved = handleLeftMove(tiles);
@@ -85,7 +86,7 @@ var GameController = (function() {
     * sort all tiles by x in ascending order
     * iterate over all the tiles and check how meny steps to the left it can move
     * if steps to move grader then 0, move the tile to left based on number of steps
-    * return true/false is tile where moved or merged
+    * return true/false if tile where moved
     */
     function handleLeftMove(tiles) {
         var moved = false;
@@ -94,7 +95,6 @@ var GameController = (function() {
             return t1.x - t2.x;
         });
 
-        // if true, move the tile to
         for (var i = 0; i < tiles.length; i++) {
             var tile = tiles[i];
             var sepsToMove = tile.canMoveLeft();
@@ -135,6 +135,7 @@ var GameController = (function() {
     /*
     * sort all tiles by y in ascending order
     * iterate over all the tiles and check how meny steps up it can move
+    * if steps to move grader then 0, move the tile up based on number of steps
     * return true/false is tile where moved or merged
     */
     function handleUpMove(tiles) {
@@ -157,8 +158,9 @@ var GameController = (function() {
     }
 
     /*
-    * sort all tiles by y in ascending order
+    * sort all tiles by y in descending order
     * iterate over all the tiles and check how meny steps down it can move
+    * if steps to move grader then 0, move the tile down based on number of steps
     * return true/false is tile where moved or merged
     */
     function handleDownMove(tiles) {

@@ -2,7 +2,6 @@ function Tile(y, x, value, id) {
     this.y = y;
     this.x = x;
     this.value = value;
-
     this.id = id;
 
     this.tileMap = TileMap.getInstance();

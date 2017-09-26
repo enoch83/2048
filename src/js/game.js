@@ -5,14 +5,18 @@ var Game = (function() {
         var _gameSize, _dimensions, _padding, _helper, _tileMap, _numberOfTilesGenerated;
 
         function setup() {
+            // get the inner with and calculate 90 % of it. This is our game area size.
+            // if size is larger then 600, set it to 600
             var gameSize = parseInt(window.innerWidth / 100) * 90;
             gameSize = gameSize > 600 ? 600 : gameSize;
 
-            _gameSize = gameSize;
-            _dimensions = 4;
-            _padding = 15;
-            _numberOfTilesGenerated = 0;
+            // store some value for later user.
+            _gameSize = gameSize; // Size of the game area
+            _dimensions = 4; // number of dimensions, its posible to to a 6x6 grid if you would like to but WHY??
+            _padding = 15; // padding used around each square in the grid
+            _numberOfTilesGenerated = 0; // a field to store the number of tiles generated, used to set id of new tiles
 
+            // get an instance of the game helper and the tile map
             _helper = GameHelper.getInstance(_gameSize, _dimensions, _padding);
             _tileMap = TileMap.getInstance();
 
@@ -25,6 +29,7 @@ var Game = (function() {
                 throw '\n element game not found! \n This element is required to setup the game';
             }
 
+            // set the height and wid of the game element
             gameElement.style.width = _gameSize + 'px';
             gameElement.style.height = _gameSize + 'px';
 
@@ -87,6 +92,7 @@ var Game = (function() {
             return true;
         };
 
+        // generate a grid of x number of rows and columns based on the _dimensions field
         var generateSquares = function() {
             var squareSize = _helper.calcSquareSize();
 
@@ -103,14 +109,17 @@ var Game = (function() {
                     div.style.width = squareSize + 'px';
                     div.style.height = squareSize + 'px';
 
+                    // set position of hte square
                     div.style.top = _helper.calcTop(y, squareSize) + 'px';
                     div.style.left = _helper.calcLeft(x, squareSize) + 'px';
 
+                    // append the div to the game element
                     game.appendChild(div);
                 }
             }
         };
 
+        // generate x number of tiles with a random number of 2 and 4, at a random available positon in the grid
         var generateTiles = function(count = 1) {
             if (count < 1) {
                 throw 'count can not be less the 1';
