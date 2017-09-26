@@ -54,6 +54,7 @@ var GameController = (function() {
         var yDiff = yDown - yUp;
 
         var tiles = _tileMap.tiles();
+        _tileMap.clearMerged();
         var moved;
 
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
