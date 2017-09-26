@@ -4,10 +4,13 @@ var Game = (function() {
     function init() {
         var _gameSize, _dimensions, _padding, _helper, _tileMap, _numberOfTilesGenerated;
 
-        function setup(gameSize = 500, dimensions = 4, padding = 15) {
+        function setup() {
+            var gameSize = parseInt(window.innerWidth / 100) * 90;
+            gameSize = gameSize > 600 ? 600 : gameSize;
+
             _gameSize = gameSize;
-            _dimensions = dimensions;
-            _padding = padding;
+            _dimensions = 4;
+            _padding = 15;
             _numberOfTilesGenerated = 0;
 
             _helper = GameHelper.getInstance(_gameSize, _dimensions, _padding);

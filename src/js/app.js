@@ -11,12 +11,8 @@
     window.addEventListener('gameLost', gameLostEventListener);
     window.addEventListener('gameWon', gameWonEventListener);
 
-    var gameSize = parseInt(window.innerWidth / 100) * 90;
-    console.log(gameSize);
-    gameSize = gameSize > 600 ? 600 : gameSize;
-
     var game = Game.getInstance();
-    game.setup(gameSize);
+    game.setup();
     game.startNewGame();
 
     function newGame() {
