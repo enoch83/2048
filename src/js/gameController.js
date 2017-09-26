@@ -13,6 +13,8 @@ var GameController = (function() {
 
     function keydownEventListener(e) {
         var tiles = _tileMap.tiles();
+        _tileMap.clearMerged();
+
         var moved;
 
         var key = e.keyCode;

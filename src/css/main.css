@@ -54,59 +54,53 @@ h6 {
     transition: 150ms linear;
     animation-duration: 500ms;
     animation-name: appare;
+    color: #37474f;
 }
 
 .tile-2 {
-    background-color: #e8eaf6;
-    color: #000000;
+    background-color: #03a9f4;
 }
 
 .tile-4 {
-    background-color: #1e88e5;
-    color: #ffffff;
+    background-color: #009688;
 }
 
 .tile-8 {
-    background-color: #b3e5fc;
-    color: #000000;
+    background-color: #4caf50;
 }
 
 .tile-16 {
-    background-color: #00acc1;
-    color: #ffffff;
+    background-color: #ffea00;
 }
 
 .tile-32 {
-    background-color: #b2dfdb;
-    color: #000000;
+    background-color: #ffab40;
 }
 
 .tile-64 {
-    background-color: #43a047;
-    color: #ffffff;
+    background-color: #ff3d00;
 }
 
 .tile-128 {
-    background-color: #dcedc8;
-    color: #000000;
+    background-color: #9c27b0;
+    color: #eceff1;
 }
 
 .tile-256 {
-    background-color: #c0ca33;
-    color: #ffffff;
+    background-color: #673ab7;
+    color: #eceff1;
 }
 
 .tile-512 {
-    background-color: #fff9c4;
-    color: #000000;
+    background-color: #e91e63;
 }
+
 .tile-1024 {
-    background-color: #ffb300;
-    color: #ffffff;
+    background-color: #dd2c00;
 }
+
 .tile-2048 {
-    background-color: #ffe0b2;
-    color: #ffffff;
+    background-color: #ffc400;
 }
 
 @media (min-width: 300px) {

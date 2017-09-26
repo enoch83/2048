@@ -3,6 +3,7 @@ var TileMap = (function() {
 
     function init() {
         var _tileMap = new Map();
+        var _tileMergedMap = new Map();
 
         function setTile(y, x, obj) {
             var key = `${y}_${x}`;
@@ -37,13 +38,30 @@ var TileMap = (function() {
             _tileMap = new Map();
         }
 
+        function setTileMerged(y, x) {
+            var key = `${y}_${x}`;
+            _tileMergedMap.set(key, true);
+        }
+
+        function hasTileMerged(y, x) {
+            var key = `${y}_${x}`;
+            return _tileMergedMap.has(key);
+        }
+
+        function clearMerged() {
+            _tileMergedMap = new Map();
+        }
+
         return {
             setTile,
             deleteTile,
             getTile,
             hasTile,
             tiles,
-            clear
+            clear,
+            setTileMerged,
+            hasTileMerged,
+            clearMerged
         };
     }
 
