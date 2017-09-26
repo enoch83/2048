@@ -31,6 +31,7 @@ Tile.prototype.render = function() {
 
     div.style.width = size + 'px';
     div.style.height = size + 'px';
+    div.style.lineHeight = size + 'px';
 
     // set the position of the div.
     div.style.top = top + 'px';

@@ -56,12 +56,6 @@ h6 {
     animation-name: appare;
 }
 
-span {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
-}
-
 .tile-2 {
     background-color: #e8eaf6;
     color: #000000;
@@ -141,7 +135,7 @@ span {
     }
     .tile-1024,
     .tile-2048 {
-        font-size: 30px;
+        font-size: 40px;
     }
 }
 .overlay {

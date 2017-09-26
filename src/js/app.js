@@ -5,7 +5,7 @@
     var tryAgainButton = document.getElementById('try-again-button');
     tryAgainButton.addEventListener('click', newGame);
     var restartButton = document.getElementById('restart-button');
-    tryAgainButton.addEventListener('click', newGame);
+    restartButton.addEventListener('click', newGame);
 
     window.addEventListener('scoreUpdate', scoreUpdateEventListener);
     window.addEventListener('gameLost', gameLostEventListener);

@@ -79,7 +79,6 @@ var Game = (function() {
             if (tiles.length < 16) return false;
 
             for (var i = 0; i < tiles.length; i++) {
-                console.log(tiles[i].canMoveLeft());
                 if (tiles[i].canMoveLeft() > 0 || tiles[i].canMoveRight() > 0 || tiles[i].canMoveUp() > 0 || tiles[i].canMoveDown() > 0) {
                     return false;
                 }
@@ -91,7 +90,7 @@ var Game = (function() {
         var generateSquares = function() {
             var squareSize = _helper.calcSquareSize();
 
-            // iterat over all the dimensins
+            // iterate over all the dimensins
             // start with the y-axis, then the x-axis
             for (var y = 0; y < _dimensions; y++) {
                 for (var x = 0; x < _dimensions; x++) {
