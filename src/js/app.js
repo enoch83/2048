@@ -8,14 +8,20 @@
     tryAgainButton.addEventListener('click', newGame);
 
     window.addEventListener('scoreUpdate', scoreUpdateEventListener);
+    window.addEventListener('gameLost', gameLostEventListener);
+    window.addEventListener('gameWon', gameWonEventListener);
+
+    var gameSize = parseInt(window.innerWidth / 100) * 90;
+    console.log(gameSize);
+    gameSize = gameSize > 600 ? 600 : gameSize;
 
     var game = Game.getInstance();
-    game.setup();
+    game.setup(gameSize);
     game.startNewGame();
 
     function newGame() {
-        document.getElementById('game-lost').style.display = 'none';
-        document.getElementById('game-won').style.display = 'none';
+        document.getElementById('game-lost').style.height = '0';
+        document.getElementById('game-won').style.height = '0';
         document.getElementById('score').innerText = 0;
 
         game.startNewGame();
@@ -25,5 +31,13 @@
         var points = e.detail;
         var currentScore = document.getElementById('score').innerText;
         document.getElementById('score').innerText = parseInt(currentScore) + parseInt(points);
+    }
+
+    function gameLostEventListener() {
+        document.getElementById('game-lost').style.height = '100%';
+    }
+
+    function gameWonEventListener() {
+        document.getElementById('game-won').style.height = '100%';
     }
 })();

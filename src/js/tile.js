@@ -15,11 +15,11 @@ Tile.prototype.render = function() {
     var left = this.helper.calcLeft(this.x, size);
 
     var div;
-    var exist = false;
+    var divExists = false;
     // try to get the element by id
     if (document.getElementById(this.id)) {
         div = document.getElementById(this.id);
-        exist = true;
+        divExists = true;
     } else {
         // create a div, set id and class
         div = document.createElement('div');
@@ -28,7 +28,6 @@ Tile.prototype.render = function() {
     }
 
     div.classList.add('tile-' + this.value);
-    div.innerHTML = this.value;
 
     div.style.width = size + 'px';
     div.style.height = size + 'px';
@@ -37,8 +36,18 @@ Tile.prototype.render = function() {
     div.style.top = top + 'px';
     div.style.left = left + 'px';
 
+    if (document.getElementById('span-' + this.id)) {
+        var list = document.getElementById('span-' + this.id);
+        list.parentNode.removeChild(list);
+    }
+
+    span = document.createElement('span');
+    span.id = 'span-' + this.id;
+    span.innerHTML = this.value;
+    div.appendChild(span);
+
     // If tile not already exist, add to DOM
-    if (!exist) {
+    if (!divExists) {
         var game = document.getElementById('game');
         game.appendChild(div);
     }

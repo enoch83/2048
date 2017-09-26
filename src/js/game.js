@@ -4,7 +4,7 @@ var Game = (function() {
     function init() {
         var _gameSize, _dimensions, _padding, _helper, _tileMap, _numberOfTilesGenerated;
 
-        function setup(gameSize = 380, dimensions = 4, padding = 15) {
+        function setup(gameSize = 500, dimensions = 4, padding = 15) {
             _gameSize = gameSize;
             _dimensions = dimensions;
             _padding = padding;
@@ -48,12 +48,11 @@ var Game = (function() {
             generateTiles();
 
             if (isGameLost()) {
-                console.log('isGameLost');
-                document.getElementById('game-lost').style.display = 'block';
+                window.dispatchEvent(new CustomEvent('gameLost'));
             }
 
             if (isGameWon()) {
-                document.getElementById('game-won').style.display = 'block';
+                window.dispatchEvent(new CustomEvent('gameWon'));
             }
         };
 
